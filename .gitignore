@@ -1,0 +1,17 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+outputs/
+cache/
+.Rprofile
+inputs
+.Rdata
+.secret
+.secrets
+
+*.tif
+
+*.png
+
+*.RData
