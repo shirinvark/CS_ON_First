@@ -1,5 +1,5 @@
-.libPaths()
-.libPaths("C:/Users/SHVAR1/AppData/Local/Programs/R/R-4.4.1/library")
+# .libPaths()
+# .libPaths("C:/Users/SHVAR1/AppData/Local/Programs/R/R-4.4.1/library")
 # remove.packages("Require")
 # devtools::install_github("PredictiveEcology/reproducible", ref = "development", dependencies = TRUE,force=TRUE) 
 # devtools::install_github("ianmseddy/PSPclean", ref = "development", dependencies = TRUE,force=TRUE)
@@ -10,13 +10,19 @@
 
 # be carefull start with a new project
 #this is a function that will check and update package,
-library(reproducible)
-repos <- c("predictiveecology.r-universe.dev", getOption("repos"))
-options(repos = repos)
+getOrUpdatePkg <- function(p, minVer, repo) {
+  if (!isFALSE(try(packageVersion(p) < minVer, silent = TRUE) )) {
+    if (missing(repo)) repo = c("predictiveecology.r-universe.dev", getOption("repos"))
+    install.packages(p, repos = repo)
+  }
+}
+getOrUpdatePkg("SpaDES.project", "0.0.8.9040")
+
 library(SpaDES.project)
 out <- SpaDES.project::setupProject(
   updateRprofile = TRUE,
   Restart = TRUE,
+  require = c("googledrive"),
   paths = list(projectPath = "CS_ON_First",
                modulePath = file.path("modules"),
                cachePath = file.path("cache"),
