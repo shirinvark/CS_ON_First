@@ -81,11 +81,13 @@ studyAreaPSPFun <- function() {
 }
 
 shirinSppEquivFun <- function() {
-  speciesOfConcern <- c("Acer_rub","Betu_all","Abie_bal","Betu_pap")
+  #speciesOfConcern <- c("Acer_rub","Betu_all","Abie_bal","Betu_pap")
+  speciesOfConcern <- c("Pice_mar", "Pice_gla", "Pinu_ban","Abie_bal")
   shirin <- LandR::sppEquivalencies_CA
   shirin <- shirin[LandR %in% speciesOfConcern,]
   write.csv(shirin, "inputs/shirinSppEquiv.CSV")
   
   return(shirin=shirin)
 }
+
 

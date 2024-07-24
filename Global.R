@@ -1,12 +1,14 @@
 # .libPaths()
 # .libPaths("C:/Users/SHVAR1/AppData/Local/Programs/R/R-4.4.1/library")
 # remove.packages("Require")
-# devtools::install_github("PredictiveEcology/reproducible", ref = "development", dependencies = TRUE,force=TRUE) 
-# devtools::install_github("ianmseddy/PSPclean", ref = "development", dependencies = TRUE,force=TRUE)
-# devtools::install_github("PredictiveEcology/SpaDES.core", ref = "development", dependencies = TRUE,force=TRUE)
-# devtools::install_github("ianmseddy/LandR.CS", ref = "development", dependencies = TRUE,force=TRUE)
-# devtools::install_github("PredictiveEcology/SpaDES.project", ref = "development", dependencies = TRUE,force=TRUE) 
-# devtools::install_github("PredictiveEcology/Require", ref = "development", dependencies = TRUE,force=TRUE) 
+#install.packages("remotes")
+#devtools::install_github("PredictiveEcology/climateData", ref = "development", dependencies = TRUE) 
+#devtools::install_github("PredictiveEcology/reproducible", ref = "development", dependencies = TRUE,force=TRUE) 
+#devtools::install_github("ianmseddy/PSPclean", ref = "development", dependencies = TRUE,force=TRUE)
+#devtools::install_github("PredictiveEcology/SpaDES.core", ref = "development", dependencies = TRUE,force=TRUE)
+#devtools::install_github("ianmseddy/LandR.CS", ref = "development", dependencies = TRUE,force=TRUE)
+#devtools::install_github("PredictiveEcology/SpaDES.project", ref = "development", dependencies = TRUE,force=TRUE) 
+#devtools::install_github("PredictiveEcology/Require", ref = "development", dependencies = TRUE,force=TRUE) 
 
 # be carefull start with a new project
 #this is a function that will check and update package,
@@ -33,9 +35,9 @@ out <- SpaDES.project::setupProject(
   modules = c(
     "PredictiveEcology/Biomass_speciesData@development",
     "PredictiveEcology/Biomass_borealDataPrep@development",
-    "PredictiveEcology/Biomass_speciesParameters@development",
-    # "PredictiveEcology/Biomass_core@development",
-    # "PredictiveEcology/canClimateData@development",
+    "PredictiveEcology/Biomass_speciesParameters@manual",
+    "PredictiveEcology/Biomass_core@development",
+     "PredictiveEcology/canClimateData@development",
     "ianmseddy/gmcsDataPrep@development"
   ),
   options = list(spades.allowInitDuringSimInit = TRUE,
@@ -48,7 +50,8 @@ out <- SpaDES.project::setupProject(
   params = list(
     .globals = list(.studyAreaName = "OntarioFirst",
                     dataYear = 2011,
-                    sppEquivCol = 'LandR'),
+                    sppEquivCol = 'LandR',
+                    .Plots = "png"),
     Biomass_borealDataPrep = list(
       overrideAgeInFires = FALSE
     ),
@@ -80,16 +83,42 @@ out$params$gmcsDataPrep$nullGrowthModel <- quote(nlme::lme(growth ~ logAge,
                                                            weights = varFunc(~plotSize^0.5 * periodLength),
                                                            data = PSPmodelData))
 
+
+
+
+
+historical_prd <- c("1951_1980", "1981_2010")
+historical_yrs <- c("1991_2022")
+
+projected_yrs <- c(2011:2051)
+
+out$climateVariables <- list(
+  historical_CMI_normal = list(
+    vars = "historical_CMI_normal",
+    fun = quote(calcCMInormal),
+    .dots = list(historical_period = historical_prd, historical_years = historical_yrs)
+  ),
+  projected_ATA = list(
+    vars = c("future_MAT", "historical_MAT_normal"),
+    fun = quote(calcATA),
+    .dots = list(historical_period = historical_prd, future_years = projected_yrs)
+  ),
+  projected_CMI = list(
+    vars = "future_CMI",
+    fun = quote(calcAsIs),
+    .dots = list(future_years = projected_yrs)
+  )
+)
+
+
+
 test <- do.call(SpaDES.core::simInitAndSpades, out)
 
 
-
-
-
-
-
-#some codes that after copleting the run should be checked
-# test$gcsModel
+# 
+# # 
+# # #some codes that after copleting the run should be checked
+#  test$gcsModel
 # x11()
-#plot(test$gcsModel)
-# plot(test$mcsModel)
+# plot(test$climateVariables)(test)
+# plot(test$gcsModel)
