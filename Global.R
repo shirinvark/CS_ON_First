@@ -42,6 +42,7 @@ out <- SpaDES.project::setupProject(
   ),
   options = list(spades.allowInitDuringSimInit = TRUE,
                  LandR.assertions = FALSE,
+                 reproducible.objSize = FALSE,
                  reproducible.shapefileRead = "terra::vect", #required if gadm is down as terra:projct won't work on sf
                  spades.recoveryMode = 1,
                  spades.moduleCodeChecks = FALSE
