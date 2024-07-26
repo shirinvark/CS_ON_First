@@ -17,3 +17,5 @@ inputs
 *.RData
 
 *.pdf
+
+*.csv
