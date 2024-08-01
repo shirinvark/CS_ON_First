@@ -58,7 +58,8 @@ out <- SpaDES.project::setupProject(
       overrideAgeInFires = FALSE
     ),
     Biomass_speciesParameters = list(
-      PSPdataTypes = c("NFI","ON","NB", "QC")
+      PSPdataTypes = c("NFI","ON","NB", "QC"), 
+      standAgesForFitting = c(20, 150)
     ),
     gmcsDataPrep = list(
       PSPdataTypes =  c("NFI", "ON", "NB", "QC"),
